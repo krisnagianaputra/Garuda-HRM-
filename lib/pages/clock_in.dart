@@ -28,13 +28,36 @@ class _ClockInState extends State<ClockIn> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 12, 53, 106),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(80),
+        child: AppBar(
+          backgroundColor: Color.fromARGB(255, 12, 53, 106),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(12),
+              bottomRight: Radius.circular(12),
+            ),
+          ),
+          title: Padding(
+            padding: const EdgeInsets.only(top: 20, right: 50),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image(
+                    image: AssetImage("lib/images/garudahrm.png"),
+                    height: 60,
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
       body: SingleChildScrollView(
         child: Center(
           child: Column(
             children: [
-              SizedBox(height: 10),
-              // Maps(),
-              SizedBox(height: 30),
               Container(
                 decoration: BoxDecoration(
                   color: Color.fromARGB(255, 255, 255, 255),

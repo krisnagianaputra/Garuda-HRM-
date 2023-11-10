@@ -16,8 +16,7 @@ class IndexProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize:
-            Size.fromHeight(100), // Set the desired height of the app bar
+        preferredSize: Size.fromHeight(80),
         child: AppBar(
           backgroundColor: Color.fromARGB(255, 12, 53, 106),
           shape: RoundedRectangleBorder(
@@ -58,8 +57,8 @@ class IndexProfile extends StatelessWidget {
                       color: const Color.fromARGB(255, 0, 0, 0)
                           .withOpacity(0.5), // warna shadow
                       spreadRadius: 2, // seberapa jauh shadow menyebar
-                      blurRadius: 3, // seberapa buram shadow
-                      offset: Offset(0, 3), // pergeseran shadow (x, y))
+                      blurRadius: 8, // seberapa buram shadow
+                      offset: Offset(0, 4), // pergeseran shadow (x, y))
                     ),
                   ],
                 ),
@@ -191,7 +190,8 @@ class IndexProfile extends StatelessWidget {
                     // Pindah ke halaman ClockOutPage saat tombol Clock Out ditekan
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => InformasiPribadi()),
+                      MaterialPageRoute(
+                          builder: (context) => InformasiPribadi()),
                     );
                   },
                   child: Row(
@@ -199,7 +199,10 @@ class IndexProfile extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(
                             right: 8.0), // Adjust the padding as needed
-                        child: Image(image: AssetImage("lib/images/iconindexprofil/1.png"), height: 30,),
+                        child: Image(
+                          image: AssetImage("lib/images/iconindexprofil/1.png"),
+                          height: 30,
+                        ),
                       ),
                       Text(
                         "Informasi Pribadi",
@@ -383,7 +386,8 @@ class IndexProfile extends StatelessWidget {
                     // Pindah ke halaman ClockOutPage saat tombol Clock Out ditekan
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => TentangAplikasi()),
+                      MaterialPageRoute(
+                          builder: (context) => TentangAplikasi()),
                     );
                   },
                   child: Row(
@@ -395,7 +399,6 @@ class IndexProfile extends StatelessWidget {
                           image: AssetImage("lib/images/iconindexprofil/6.png"),
                           height: 30,
                         ),
-
                       ),
                       Text(
                         "Tentang Aplikasi",
@@ -435,7 +438,7 @@ class IndexProfile extends StatelessWidget {
                         child: Text(
                           "Logout",
                           style: TextStyle(
-                            fontSize: 25,
+                              fontSize: 25,
                               color: const Color.fromARGB(255, 255, 255, 255)),
                         ),
                       ),
@@ -451,6 +454,7 @@ class IndexProfile extends StatelessWidget {
                   ),
                 ),
               ),
+              SizedBox(height: 20,)
             ],
           ),
         ),
