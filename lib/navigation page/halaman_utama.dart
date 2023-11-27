@@ -11,9 +11,14 @@ import 'package:attendance_app/fitur%20transaksi/perubahan_status_pegawai.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class HalamanUtama extends StatelessWidget {
+class HalamanUtama extends StatefulWidget {
   const HalamanUtama({super.key});
 
+  @override
+  State<HalamanUtama> createState() => _HalamanUtamaState();
+}
+
+class _HalamanUtamaState extends State<HalamanUtama> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(

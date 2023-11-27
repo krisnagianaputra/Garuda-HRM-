@@ -1,16 +1,92 @@
+import 'package:attendance_app/api_service.dart';
 import 'package:attendance_app/components/bottom_navigation.dart';
-import 'package:attendance_app/wellcome_page.dart';
 import 'package:flutter/material.dart';
+import 'package:attendance_app/wellcome_page.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:logging/logging.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key});
+  LoginPage({Key? key}) : super(key: key);
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
-  bool _rememberMe = true;
+  final Logger log = Logger('LoginPage');
+
+  final TextEditingController emailController = TextEditingController();
+
+  final TextEditingController passwordController = TextEditingController();
+
+  Future<void> _login(BuildContext context) async {
+    final String email = emailController.text;
+    final String password = passwordController.text;
+
+    final response = await http.post(
+      Uri.parse('https://hrm.garudatechnusantara.com/api/auth/login'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'email': email,
+        'password': password,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      // Handle successful login
+      var responseData = json.decode(response.body);
+      String token = responseData['token'];
+
+      if (token.isNotEmpty) {
+        print('Login Successful');
+        print(token);
+        ApiService.saveToken(token);
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => BottomNavigation()));
+      } else {
+        print('Login Failed');
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Login Failed'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close the dialog
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    } else {
+      // Handle other status codes if needed
+      print('Login Failed with status code: ${response.statusCode}');
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Login Failed'),
+            content: Text('Something went wrong. Please try again.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,8 +160,9 @@ class _LoginPageState extends State<LoginPage> {
                             height: 10,
                           ),
                           TextField(
+                            controller: emailController,
                             decoration: InputDecoration(
-                              labelText: 'Username',
+                              labelText: 'Email',
                               border: OutlineInputBorder(),
                             ),
                           ),
@@ -105,6 +182,7 @@ class _LoginPageState extends State<LoginPage> {
                             height: 10,
                           ),
                           TextField(
+                            controller: passwordController,
                             obscureText: true,
                             decoration: InputDecoration(
                               labelText: 'Password',
@@ -114,16 +192,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           Row(
                             children: [
-                              Checkbox(
-                                value:
-                                    _rememberMe, // Set the initial checkbox state
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    _rememberMe = value ??
-                                        false; // Update the checkbox state
-                                  });
-                                },
-                              ),
+                              //checkbox
                               Text('Remember Me'),
                               SizedBox(
                                 width: 50,
@@ -144,14 +213,7 @@ class _LoginPageState extends State<LoginPage> {
                             height: 10,
                           ),
                           ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        BottomNavigation()), // Pindah ke halaman detail
-                              );
-                            },
+                            onPressed:() => _login(context),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Color.fromARGB(
                                   255, 12, 53, 106), // Background color

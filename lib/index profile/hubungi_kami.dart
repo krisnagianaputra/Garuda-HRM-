@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 
-class HubungiKami extends StatelessWidget {
+class HubungiKami extends StatefulWidget {
   const HubungiKami({super.key});
 
+  @override
+  State<HubungiKami> createState() => _HubungiKamiState();
+}
+
+class _HubungiKamiState extends State<HubungiKami> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

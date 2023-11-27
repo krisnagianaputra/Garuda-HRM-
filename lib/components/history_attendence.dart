@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 
-class HistoryAttendence extends StatelessWidget {
+class HistoryAttendence extends StatefulWidget {
   const HistoryAttendence({super.key});
 
+  @override
+  State<HistoryAttendence> createState() => _HistoryAttendenceState();
+}
+
+class _HistoryAttendenceState extends State<HistoryAttendence> {
   @override
   Widget build(BuildContext context) {
     return Expanded(

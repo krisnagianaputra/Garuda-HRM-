@@ -1,17 +1,50 @@
+import 'dart:convert';
 import 'dart:io';
+import 'package:http/http.dart' as http;
 import 'package:attendance_app/pages/lokasi.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ClockIn extends StatefulWidget {
-  const ClockIn({Key? key});
-
   @override
   _ClockInState createState() => _ClockInState();
 }
 
 class _ClockInState extends State<ClockIn> {
+  TextEditingController _keteranganController = TextEditingController();
   File? _image;
+  String _status = 'Belum Absen';
+  String data ='';
+
+  void _absen() async {
+    final String url = 'https://hrm.garudatechnusantara.com/api/attendance/check_in';
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'status': 'Berhasil Absen',
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        setState(() {
+          _status = 'Berhasil Absen';
+        });
+      } else {
+        setState(() {
+          _status = 'Gagal Absen';
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _status = 'Error: $e';
+      });
+    }
+  }
 
   Future<void> _getImage() async {
     final picker = ImagePicker();
@@ -88,7 +121,7 @@ class _ClockInState extends State<ClockIn> {
                           textAlign: TextAlign.center,
                         ),
                       ),
-                    ),
+                    ),                    
                     Padding(
                       padding: const EdgeInsets.all(12),
                       child: Column(
@@ -123,6 +156,7 @@ class _ClockInState extends State<ClockIn> {
                       ),
                     ),
                     SizedBox(height: 50),
+                    
                     Lokasi(),
                     SizedBox(
                       height: 40,
@@ -130,6 +164,7 @@ class _ClockInState extends State<ClockIn> {
                     Container(
                       margin: EdgeInsets.symmetric(horizontal: 50),
                       child: TextField(
+                        controller: _keteranganController,
                         decoration: InputDecoration(
                           hintText: 'Masukkan catatan...',
                           border: OutlineInputBorder(),
@@ -148,29 +183,15 @@ class _ClockInState extends State<ClockIn> {
                         onPressed: () async {
                           await _getImage();
                           if (_image == null) {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text('Peringatan'),
-                                  content: Text('Inputan gambar harus diisi!'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text('OK'),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
+                            'berhasil mengambil gambar';
+                          } else {
+                            'gagal mengambil gambar';
                           }
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color.fromARGB(255, 12, 53, 106),
                         ),
-                        child: Text('Pilih Gambar'),
+                        child: Text('Ambil Gambar'),
                       ),
                     ),
                     SizedBox(height: 20),

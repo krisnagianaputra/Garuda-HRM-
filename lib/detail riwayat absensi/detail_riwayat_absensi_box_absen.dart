@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 
-class BoxRiwayatAbsensiAbsen extends StatelessWidget {
+class BoxRiwayatAbsensiAbsen extends StatefulWidget {
   const BoxRiwayatAbsensiAbsen({super.key});
 
+  @override
+  State<BoxRiwayatAbsensiAbsen> createState() => _BoxRiwayatAbsensiAbsenState();
+}
+
+class _BoxRiwayatAbsensiAbsenState extends State<BoxRiwayatAbsensiAbsen> {
   @override
   Widget build(BuildContext context) {
     return Padding(

@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 
-class PengajuanSP extends StatelessWidget {
+class PengajuanSP extends StatefulWidget {
   const PengajuanSP({super.key});
 
+  @override
+  State<PengajuanSP> createState() => _PengajuanSPState();
+}
+
+class _PengajuanSPState extends State<PengajuanSP> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

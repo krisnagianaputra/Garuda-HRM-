@@ -4,9 +4,14 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 // ignore: must_be_immutable
-class ProfileEdit extends StatelessWidget {
+class ProfileEdit extends StatefulWidget {
   ProfileEdit({Key? key}) : super(key: key);
 
+  @override
+  State<ProfileEdit> createState() => _ProfileEditState();
+}
+
+class _ProfileEditState extends State<ProfileEdit> {
   bool isKeyboardVisible = false;
 
   @override

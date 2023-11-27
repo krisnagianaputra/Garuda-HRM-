@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 
-class TentangAplikasi extends StatelessWidget {
+class TentangAplikasi extends StatefulWidget {
   const TentangAplikasi({super.key});
 
+  @override
+  State<TentangAplikasi> createState() => _TentangAplikasiState();
+}
+
+class _TentangAplikasiState extends State<TentangAplikasi> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

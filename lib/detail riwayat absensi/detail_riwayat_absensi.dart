@@ -2,9 +2,14 @@ import 'package:attendance_app/detail%20riwayat%20absensi/detail_riwayat_absensi
 import 'package:attendance_app/detail%20riwayat%20absensi/detail_riwayat_absensi_box_hadir.dart';
 import 'package:flutter/material.dart';
 
-class DetailRiwayatAbsensi extends StatelessWidget {
+class DetailRiwayatAbsensi extends StatefulWidget {
   const DetailRiwayatAbsensi({super.key});
 
+  @override
+  State<DetailRiwayatAbsensi> createState() => _DetailRiwayatAbsensiState();
+}
+
+class _DetailRiwayatAbsensiState extends State<DetailRiwayatAbsensi> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

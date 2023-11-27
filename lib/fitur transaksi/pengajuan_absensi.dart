@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 
-class PengajuanAbsensi extends StatelessWidget {
+class PengajuanAbsensi extends StatefulWidget {
   const PengajuanAbsensi({super.key});
 
+  @override
+  State<PengajuanAbsensi> createState() => _PengajuanAbsensiState();
+}
+
+class _PengajuanAbsensiState extends State<PengajuanAbsensi> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

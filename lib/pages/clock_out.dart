@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:attendance_app/api/api_service1.dart';
 import 'package:attendance_app/pages/lokasi.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -12,6 +13,7 @@ class ClockOut extends StatefulWidget {
 
 class _ClockOutState extends State<ClockOut> {
   File? _image;
+  TextEditingController _textEditingController = TextEditingController();
 
   Future<void> _getImage() async {
     final picker = ImagePicker();
@@ -22,6 +24,21 @@ class _ClockOutState extends State<ClockOut> {
         _image = File(pickedFile.path);
       }
     });
+  }
+
+  Future<void> _postClockOut(String note, File? image) async {
+    try {
+      await ApiService1.postClockOut(note, image); // Menggunakan fungsi postClockOut dari ApiService1
+      if (image != null) {
+        await ApiService1.uploadImage(image);
+      }
+
+      // Handle the response as needed
+      print('Clock Out successful');
+    } catch (error) {
+      // Handle errors
+      print('Error posting Clock Out: $error');
+    }
   }
 
   @override
@@ -98,10 +115,12 @@ class _ClockOutState extends State<ClockOut> {
                           // Widget Maps() atau konten lokasi Anda dapat ditambahkan di sini
                         ],
                       ),
-                    ),                    
+                    ),
                     SizedBox(height: 50),
                     Lokasi(),
-                    SizedBox(height: 40,),
+                    SizedBox(
+                      height: 40,
+                    ),
                     Container(
                       margin: EdgeInsets.symmetric(horizontal: 50),
                       child: TextField(
@@ -145,7 +164,7 @@ class _ClockOutState extends State<ClockOut> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color.fromARGB(255, 12, 53, 106),
                         ),
-                        child: Text('Pilih Gambar'),
+                        child: Text('Ambil Gambar'),
                       ),
                     ),
                     SizedBox(height: 20),
@@ -161,7 +180,10 @@ class _ClockOutState extends State<ClockOut> {
                     SizedBox(height: 20),
                     Center(
                       child: ElevatedButton(
-                        onPressed: () async {},
+                        onPressed: () async {
+                          String note = _textEditingController.text;
+                          await _postClockOut(note, _image);
+                        },
                         child: Text('Kirim'),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color.fromARGB(255, 12, 53, 106),

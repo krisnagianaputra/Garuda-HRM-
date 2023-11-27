@@ -1,9 +1,14 @@
 import 'package:attendance_app/pages/qr_code_scanner.dart';
 import 'package:flutter/material.dart';
 
-class KodeAktivasi extends StatelessWidget {
+class KodeAktivasi extends StatefulWidget {
   const KodeAktivasi({super.key});
 
+  @override
+  State<KodeAktivasi> createState() => _KodeAktivasiState();
+}
+
+class _KodeAktivasiState extends State<KodeAktivasi> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(

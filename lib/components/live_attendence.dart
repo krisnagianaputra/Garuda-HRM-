@@ -3,9 +3,14 @@ import 'package:attendance_app/pages/clock_out.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 
-class LiveAttendence extends StatelessWidget {
+class LiveAttendence extends StatefulWidget {
   const LiveAttendence({super.key});
 
+  @override
+  State<LiveAttendence> createState() => _LiveAttendenceState();
+}
+
+class _LiveAttendenceState extends State<LiveAttendence> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -88,7 +93,7 @@ class LiveAttendence extends StatelessWidget {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => const ClockIn()),
+                                        builder: (context) => ClockIn()),
                                   );
                                 },
                                 child: Text("Clock In"),

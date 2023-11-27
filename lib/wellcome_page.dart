@@ -2,9 +2,14 @@ import 'package:attendance_app/components/bottom_navigation.dart';
 import 'package:attendance_app/pages/login_page.dart';
 import 'package:flutter/material.dart';
 
-class WellcomePage extends StatelessWidget {
+class WellcomePage extends StatefulWidget {
   const WellcomePage({super.key});
 
+  @override
+  State<WellcomePage> createState() => _WellcomePageState();
+}
+
+class _WellcomePageState extends State<WellcomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

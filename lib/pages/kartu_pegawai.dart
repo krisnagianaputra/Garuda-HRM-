@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 
-class KartuPegawai extends StatelessWidget {
+class KartuPegawai extends StatefulWidget {
   const KartuPegawai({Key? key});
 
+  @override
+  State<KartuPegawai> createState() => _KartuPegawaiState();
+}
+
+class _KartuPegawaiState extends State<KartuPegawai> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(

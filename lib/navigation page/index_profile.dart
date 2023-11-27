@@ -9,9 +9,14 @@ import 'package:attendance_app/pages/riwayat_absensi.dart';
 import 'package:attendance_app/wellcome_page.dart';
 import 'package:flutter/material.dart';
 
-class IndexProfile extends StatelessWidget {
+class IndexProfile extends StatefulWidget {
   const IndexProfile({super.key});
 
+  @override
+  State<IndexProfile> createState() => _IndexProfileState();
+}
+
+class _IndexProfileState extends State<IndexProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
