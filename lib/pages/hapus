@@ -1,0 +1,177 @@
+Future<void> _login(BuildContext context) async {
+    final String email = emailController.text;
+    final String password = passwordController.text;
+
+    final response = await http.post(
+      Uri.parse('https://hrm.garudatechnusantara.com/api/auth/login'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'email': email,
+        'password': password,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      // Handle successful login
+      var responseData = json.decode(response.body);
+      String token = responseData['token'];
+
+      if (token.isNotEmpty) {
+        print('Login Successful');
+        print(token);
+        ApiService.saveToken(token);
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => BottomNavigation()));
+      } else {
+        print('Login Failed');
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Login Failed'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close the dialog
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    } else {
+      // Handle other status codes if needed
+      print('Login Failed with status code: ${response.statusCode}');
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Login Failed'),
+            content: Text('Something went wrong. Please try again.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+
+  Future login(email, password) async{
+    Map<String, String> body= {"email" : email, "password" : password};
+    var response = await http.post(
+      Uri.parse('https://hrm.garudatechnusantara.com/api/auth/login'),
+      body: body,);
+      if (response.statusCode == 401) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("email atau password salah")));
+      } else {
+      print(response.body);
+      }
+  }
+
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  late Future<String> _name, _token, _id;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    _token = _prefs.then((SharedPreferences prefs){
+      return prefs.getString("token")?? "";
+    });
+
+    _name = _prefs.then((SharedPreferences prefs){
+      return prefs.getString("name")?? "";
+    });
+
+    _id = _prefs.then((SharedPreferences prefs){
+      return prefs.getString("id")?? "";
+    });
+  }
+
+  Future<void> _profile(BuildContext context) async {
+    String token = ApiService.getToken() as String;
+    final response = await http.get(
+        Uri.parse('https://hrm.garudatechnusantara.com/api/auth/profile'),
+        headers: <String, String>{
+          'Authorization': 'Bearer ' + token,
+          'Content-Type': 'application/json; charset=UTF-8',
+        });
+
+    if (response.statusCode == 200) {
+      // Handle successful login
+      var responseData = json.decode(response.body);
+      print(responseData);
+    } else {
+      // Handle other status codes if needed
+      print('-');
+    }
+  }
+
+  // Align(
+                      //   alignment: AlignmentDirectional.topStart,
+                      //   child: FutureBuilder(
+                      //       future: name,
+                      //       builder: (BuildContext context,
+                      //           AsyncSnapshot<String> snapshot) {
+                      //         if (snapshot.connectionState ==
+                      //             ConnectionState.waiting) {
+                      //           return CircularProgressIndicator();
+                      //         } else {
+                      //           if (snapshot.hasData) {
+                      //             print(snapshot.data);
+                      //             return Text(
+                      //               snapshot.data!,
+                      //               style: TextStyle(
+                      //                   fontSize: 20,
+                      //                   fontWeight: FontWeight.bold),
+                      //             );
+                      //           } else {
+                      //             return Text(
+                      //               "-",
+                      //               style: TextStyle(
+                      //                   fontSize: 20,
+                      //                   fontWeight: FontWeight.bold),
+                      //             );
+                      //           }
+                      //         }
+                      //       }),
+                      // ),
+                      // Align(
+                      //   alignment: AlignmentDirectional.topStart,
+                      //   child: FutureBuilder(
+                      //       future: id,
+                      //       builder: (BuildContext context,
+                      //           AsyncSnapshot<String> snapshot) {
+                      //         if (snapshot.connectionState ==
+                      //             ConnectionState.waiting) {
+                      //           return CircularProgressIndicator();
+                      //         } else {
+                      //           if (snapshot.hasData) {
+                      //             print(snapshot.data);
+                      //             return Text(
+                      //               snapshot.data!,
+                      //               style: TextStyle(
+                      //                   fontSize: 16,),
+                      //             );
+                      //           } else {
+                      //             return Text(
+                      //               "-",
+                      //               style: TextStyle(
+                      //                   fontSize: 16,),
+                      //             );
+                      //           }
+                      //         }
+                      //       }),
+                      // ),

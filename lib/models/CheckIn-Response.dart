@@ -1,23 +1,23 @@
 // To parse this JSON data, do
 //
-//     final loginResponse = loginResponseFromJson(jsonString);
+//     final CheckInResponse = CheckInResponseFromJson(jsonString);
 
 import 'dart:convert';
 
-LoginResponse loginResponseFromJson(String str) => LoginResponse.fromJson(json.decode(str));
+CheckInResponse CheckInResponseFromJson(String str) => CheckInResponse.fromJson(json.decode(str));
 
-String loginResponseToJson(LoginResponse data) => json.encode(data.toJson());
+String CheckInResponseToJson(CheckInResponse data) => json.encode(data.toJson());
 
-class LoginResponse {
+class CheckInResponse {
     String message;
     Data data;
 
-    LoginResponse({
+    CheckInResponse({
         required this.message,
         required this.data,
     });
 
-    factory LoginResponse.fromJson(Map<String, dynamic> json) => LoginResponse(
+    factory CheckInResponse.fromJson(Map<String, dynamic> json) => CheckInResponse(
         message: json["message"],
         data: Data.fromJson(json["data"]),
     );

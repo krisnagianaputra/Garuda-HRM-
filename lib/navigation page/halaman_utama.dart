@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:attendance_app/api_service.dart';
 import 'package:attendance_app/fitur%20transaksi/pengajuan_absensi.dart';
 import 'package:attendance_app/fitur%20transaksi/pengajuan_cuti.dart';
 import 'package:attendance_app/fitur%20transaksi/pengajuan_dinas.dart';
@@ -8,8 +10,33 @@ import 'package:attendance_app/fitur%20transaksi/pengajuan_peralatan.dart';
 import 'package:attendance_app/fitur%20transaksi/pengajuan_reimburse.dart';
 import 'package:attendance_app/fitur%20transaksi/pengajuan_sp.dart';
 import 'package:attendance_app/fitur%20transaksi/perubahan_status_pegawai.dart';
+import 'package:attendance_app/models/login-response.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+
+
+Future<User> fetchUser() async {
+
+  String token = await ApiService.getToken() as String;
+  final response = await http.get(Uri.parse('https://hrm.garudatechnusantara.com/api/auth/profile'), 
+    headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization' : 'Bearer ' + token,
+      },
+  );
+
+  if (response.statusCode == 200) {
+    // If the server did return a 200 OK response,
+    // then parse the JSON.
+    // print(response.body);
+    return User.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+  } else {
+    // If the server did not return a 200 OK response,
+    // then throw an exception.
+    throw Exception('Failed to load User');
+  }
+}
 
 class HalamanUtama extends StatefulWidget {
   const HalamanUtama({super.key});
@@ -19,6 +46,14 @@ class HalamanUtama extends StatefulWidget {
 }
 
 class _HalamanUtamaState extends State<HalamanUtama> {
+  late Future<User> futureUser;
+
+  @override
+  void initState() {
+    super.initState();
+    futureUser = fetchUser();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -31,15 +66,29 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                 padding: const EdgeInsets.only(right: 25, left: 35, top: 30),
                 child: Row(
                   children: [
-                    Text(
-                      "Hi Iksan",
-                      style:
-                          GoogleFonts.aBeeZee(
-                            textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.w300),
-                          )
-                    ),
+                    FutureBuilder(
+                        future: futureUser,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            // print(snapshot.data!.name);
+                            return Text('Hi ' + snapshot.data!.name,
+                                style: GoogleFonts.aBeeZee(
+                                  textStyle: TextStyle(
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.w300),
+                                ));
+                          } else if (snapshot.hasError) {
+                            return Text('${snapshot.error}');
+                          }
+
+                          // By default, show a loading spinner.
+                          return const CircularProgressIndicator(
+                            color: Colors.black,
+                          );
+                        }
+                      ),
                     SizedBox(
-                      width: 145,
+                      width: 50,
                     ),
                     Image(
                       image: AssetImage("lib/images/pp.png"),

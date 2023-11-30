@@ -109,9 +109,8 @@ class _LokasiState extends State<Lokasi> {
               ? Center(child: CircularProgressIndicator())
               : ElevatedButton(
                   style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all(const Color.fromARGB(255, 12, 53, 106)),
-                    
+                    backgroundColor: MaterialStateProperty.all(
+                        const Color.fromARGB(255, 12, 53, 106)),
                   ),
                   onPressed: () async {
                     setState(() {
@@ -126,7 +125,7 @@ class _LokasiState extends State<Lokasi> {
                     });
 
                     getAddressFromLongLat(position);
-                  },                  
+                  },
                   child: Text("Track Lokasi"),
                 ),
         ],

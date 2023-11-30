@@ -18,11 +18,10 @@ class _AbsensiState extends State<Absensi> {
           child: Center(
             child: Column(
               children: [
-                SizedBox(height: 10),
                 // profile
                 ProfileBar(),
 
-                SizedBox(height: 25),
+                SizedBox(height: 0),
 
                 // live attendance
                 LiveAttendence(),

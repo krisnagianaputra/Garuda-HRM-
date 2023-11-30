@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'dart:io';
-import 'package:http/http.dart' as http;
 import 'package:attendance_app/pages/lokasi.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -13,38 +11,6 @@ class ClockIn extends StatefulWidget {
 class _ClockInState extends State<ClockIn> {
   TextEditingController _keteranganController = TextEditingController();
   File? _image;
-  String _status = 'Belum Absen';
-  String data ='';
-
-  void _absen() async {
-    final String url = 'https://hrm.garudatechnusantara.com/api/attendance/check_in';
-
-    try {
-      final response = await http.post(
-        Uri.parse(url),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(<String, String>{
-          'status': 'Berhasil Absen',
-        }),
-      );
-
-      if (response.statusCode == 200) {
-        setState(() {
-          _status = 'Berhasil Absen';
-        });
-      } else {
-        setState(() {
-          _status = 'Gagal Absen';
-        });
-      }
-    } catch (e) {
-      setState(() {
-        _status = 'Error: $e';
-      });
-    }
-  }
 
   Future<void> _getImage() async {
     final picker = ImagePicker();

@@ -1,13 +1,39 @@
+import 'dart:convert';
+import 'package:attendance_app/api_service.dart';
 import 'package:attendance_app/index%20profile/hubungi_kami.dart';
 import 'package:attendance_app/index%20profile/informasi_pribadi.dart';
 import 'package:attendance_app/index%20profile/kode_aktivasi.dart';
 import 'package:attendance_app/index%20profile/tentang_aplikasi.dart';
+import 'package:attendance_app/models/login-response.dart';
 import 'package:attendance_app/pages/kartu_pegawai.dart';
 import 'package:attendance_app/pages/profile_edit.dart';
 import 'package:attendance_app/pages/qr_code_scanner.dart';
 import 'package:attendance_app/pages/riwayat_absensi.dart';
 import 'package:attendance_app/wellcome_page.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
+
+Future<User> fetchUser() async {
+  String token = await ApiService.getToken() as String;
+  final response = await http.get(Uri.parse('https://hrm.garudatechnusantara.com/api/auth/profile'), 
+    headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization' : 'Bearer ' + token,
+      },
+  );
+
+  if (response.statusCode == 200) {
+    // If the server did return a 200 OK response,
+    // then parse the JSON.
+    print(response.body);
+    return User.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+  } else {
+    // If the server did not return a 200 OK response,
+    // then throw an exception.
+    throw Exception('Failed to load User');
+  }
+}
 
 class IndexProfile extends StatefulWidget {
   const IndexProfile({super.key});
@@ -17,6 +43,16 @@ class IndexProfile extends StatefulWidget {
 }
 
 class _IndexProfileState extends State<IndexProfile> {
+  
+  late Future<User> futureUser;
+
+
+  @override
+  void initState() {
+    super.initState();
+    futureUser = fetchUser();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,7 +89,7 @@ class _IndexProfileState extends State<IndexProfile> {
             children: [
               Container(
                 width: 400,
-                height: 200,
+                height: 250,
                 decoration: BoxDecoration(
                   color: Color.fromARGB(255, 255, 255, 255),
                   borderRadius: BorderRadius.all(Radius.circular(30)),
@@ -79,12 +115,49 @@ class _IndexProfileState extends State<IndexProfile> {
                     SizedBox(
                       height: 10,
                     ),
-                    Text(
-                      "DeviSka@gmail.com",
-                      style: TextStyle(
+                    Center(
+                      child: FutureBuilder(
+                        future: futureUser,
+                        builder: (context, snapshot){
+                          if (snapshot.hasData) {
+                                print(snapshot.data!.name);
+                                return Text(snapshot.data!.name, style: TextStyle(
                           color: Color.fromARGB(255, 12, 53, 106),
                           fontSize: 17,
                           fontWeight: FontWeight.w900),
+                          );
+                              } else if (snapshot.hasError) {
+                                return Text('${snapshot.error}');
+                              }
+
+                              // By default, show a loading spinner.
+                              return const CircularProgressIndicator();
+                        }
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Center(
+                      child: FutureBuilder(
+                        future: futureUser,
+                        builder: (context, snapshot){
+                          if (snapshot.hasData) {
+                                print(snapshot.data!.email);
+                                return Text(snapshot.data!.email, style: TextStyle(
+                          color: Color.fromARGB(150, 12, 53, 106),
+                          fontSize: 14,
+                          // fontWeight: FontWeight.w900
+                        ),);
+                              } else if (snapshot.hasError) {
+                                return Text('${snapshot.error}');
+                              }
+
+                            // By default, show a loading spinner.
+                            return const CircularProgressIndicator(
+                              color: Colors.black,
+                            );
+                          }),
                     ),
                     SizedBox(
                       height: 20,

@@ -15,9 +15,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final Logger log = Logger('LoginPage');
-
   final TextEditingController emailController = TextEditingController();
-
   final TextEditingController passwordController = TextEditingController();
 
   Future<void> _login(BuildContext context) async {
@@ -38,9 +36,12 @@ class _LoginPageState extends State<LoginPage> {
     if (response.statusCode == 200) {
       // Handle successful login
       var responseData = json.decode(response.body);
-      String token = responseData['token'];
+      bool status = responseData['status'];
+      String message = responseData['message'];
 
-      if (token.isNotEmpty) {
+      if (status == true) {
+        String token = responseData['token'];
+
         print('Login Successful');
         print(token);
         ApiService.saveToken(token);
@@ -49,21 +50,22 @@ class _LoginPageState extends State<LoginPage> {
       } else {
         print('Login Failed');
         showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('Login Failed'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(); // Close the dialog
-                  },
-                  child: Text('OK'),
-                ),
-              ],
-            );
-          },
-        );
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Login Failed'),
+            content: Text(message),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
       }
     } else {
       // Handle other status codes if needed
@@ -73,7 +75,7 @@ class _LoginPageState extends State<LoginPage> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Login Failed'),
-            content: Text('Something went wrong. Please try again.'),
+            content: Text(response.body),
             actions: [
               TextButton(
                 onPressed: () {

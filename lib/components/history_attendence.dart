@@ -1,4 +1,31 @@
+import 'dart:convert';
+import 'package:attendance_app/api_service.dart';
+import 'package:attendance_app/models/CheckIn-Response.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
+
+Future<CheckInResponse> fetchCheckInResponse() async {
+  String token = await ApiService.getToken() as String;
+  final response = await http.post(Uri.parse('https://hrm.garudatechnusantara.com/api/attendance/check_in'), 
+    headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization' : 'Bearer ' + token,
+      },
+  );
+
+  if (response.statusCode == 200) {
+    // If the server did return a 200 OK response,
+    // then parse the JSON.
+    print(response.body);
+    return CheckInResponse.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+  } else {
+    // If the server did not return a 200 OK response,
+    // then throw an exception.
+    throw Exception('Failed to load CheckInResponse');
+  }
+}
+
 
 class HistoryAttendence extends StatefulWidget {
   const HistoryAttendence({super.key});
@@ -8,6 +35,14 @@ class HistoryAttendence extends StatefulWidget {
 }
 
 class _HistoryAttendenceState extends State<HistoryAttendence> {
+  late Future<CheckInResponse> futureCheckInResponse;
+
+  @override
+  void initState() {
+    super.initState();
+    futureCheckInResponse = fetchCheckInResponse();
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -43,227 +78,23 @@ class _HistoryAttendenceState extends State<HistoryAttendence> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            width: 307,
-                            height: 30.75,
-                            child: Stack(
-                              children: [
-                                Positioned(
-                                  left: 0,
-                                  top: 0,
-                                  child: Text(
-                                    'Mon, 18 April 2023',
-                                    style: TextStyle(
-                                      color: Color(0xFF5D5D5D),
-                                      fontSize: 15,
-                                      fontFamily: 'Inter',
-                                      fontWeight: FontWeight.w600,
-                                      height: 0,
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  left: 169,
-                                  top: 0,
-                                  child: Text(
-                                    '08:00 - 05:00 PM',
-                                    style: TextStyle(
-                                      color: Color(0xFF5D5D5D),
-                                      fontSize: 15,
-                                      fontFamily: 'Inter',
-                                      fontWeight: FontWeight.w600,
-                                      height: 0,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 14),
-                          Container(
-                            width: 306,
-                            height: 30.75,
-                            child: Stack(
-                              children: [
-                                Positioned(
-                                  left: 0,
-                                  top: 0,
-                                  child: Text(
-                                    'Fri, 15 April 2023',
-                                    style: TextStyle(
-                                      color: Color(0xFF5D5D5D),
-                                      fontSize: 15,
-                                      fontFamily: 'Inter',
-                                      fontWeight: FontWeight.w600,
-                                      height: 0,
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  left: 169,
-                                  top: 0,
-                                  child: Text(
-                                    '08:52 - 05:00 PM',
-                                    style: TextStyle(
-                                      color: Color(0xFFDD5643),
-                                      fontSize: 15,
-                                      fontFamily: 'Inter',
-                                      fontWeight: FontWeight.w600,
-                                      height: 0,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 14),
-                          Container(
-                            width: 305,
-                            height: 30.75,
-                            child: Stack(
-                              children: [
-                                Positioned(
-                                  left: 0,
-                                  top: 0,
-                                  child: Text(
-                                    'Thu, 14 April 2023',
-                                    style: TextStyle(
-                                      color: Color(0xFF5D5D5D),
-                                      fontSize: 15,
-                                      fontFamily: 'Inter',
-                                      fontWeight: FontWeight.w600,
-                                      height: 0,
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  left: 169,
-                                  top: 0,
-                                  child: Text(
-                                    '07:45 - 05:00 PM',
-                                    style: TextStyle(
-                                      color: Color(0xFF5D5D5D),
-                                      fontSize: 15,
-                                      fontFamily: 'Inter',
-                                      fontWeight: FontWeight.w600,
-                                      height: 0,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 14),
-                          Container(
-                            width: 305,
-                            height: 30.75,
-                            child: Stack(
-                              children: [
-                                Positioned(
-                                  left: 0,
-                                  top: 0,
-                                  child: Text(
-                                    'Wed, 13 April 2023',
-                                    style: TextStyle(
-                                      color: Color(0xFF5D5D5D),
-                                      fontSize: 15,
-                                      fontFamily: 'Inter',
-                                      fontWeight: FontWeight.w600,
-                                      height: 0,
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  left: 169,
-                                  top: 0,
-                                  child: Text(
-                                    '07:55 - 05:00 PM',
-                                    style: TextStyle(
-                                      color: Color(0xFF5D5D5D),
-                                      fontSize: 15,
-                                      fontFamily: 'Inter',
-                                      fontWeight: FontWeight.w600,
-                                      height: 0,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 14),
-                          Container(
-                            width: 307,
-                            height: 30.75,
-                            child: Stack(
-                              children: [
-                                Positioned(
-                                  left: 0,
-                                  top: 0,
-                                  child: Text(
-                                    'Tue, 12 April 2023',
-                                    style: TextStyle(
-                                      color: Color(0xFF5D5D5D),
-                                      fontSize: 15,
-                                      fontFamily: 'Inter',
-                                      fontWeight: FontWeight.w600,
-                                      height: 0,
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  left: 169,
-                                  top: 0,
-                                  child: Text(
-                                    '08:48 - 05:00 PM',
-                                    style: TextStyle(
-                                      color: Color(0xFFDD5643),
-                                      fontSize: 15,
-                                      fontFamily: 'Inter',
-                                      fontWeight: FontWeight.w600,
-                                      height: 0,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 14),
-                          Container(
-                            width: 304,
-                            height: 30.75,
-                            child: Stack(
-                              children: [
-                                Positioned(
-                                  left: 0,
-                                  top: 0,
-                                  child: Text(
-                                    'Mon, 11 April 2023',
-                                    style: TextStyle(
-                                      color: Color(0xFF5D5D5D),
-                                      fontSize: 15,
-                                      fontFamily: 'Inter',
-                                      fontWeight: FontWeight.w600,
-                                      height: 0,
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  left: 169,
-                                  top: 0,
-                                  child: Text(
-                                    '07:52 - 05:00 PM',
-                                    style: TextStyle(
-                                      color: Color(0xFF5D5D5D),
-                                      fontSize: 15,
-                                      fontFamily: 'Inter',
-                                      fontWeight: FontWeight.w600,
-                                      height: 0,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                          Align(
+                            alignment: AlignmentDirectional.topStart,
+                            child: FutureBuilder(
+                                future: futureCheckInResponse,
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData) {
+                                    print(snapshot.data!.data.tanggal);
+                                    return Text(
+                                        snapshot.data!.data.tanggal as String);
+                                  } else if (snapshot.hasError) {
+                                    return Text('${snapshot.error}');
+                                  }
+
+                                  // By default, show a loading spinner.
+                                  return const CircularProgressIndicator();
+                                }),
+                          )
                         ],
                       ),
                     ),

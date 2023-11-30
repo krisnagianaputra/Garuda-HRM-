@@ -1,4 +1,29 @@
+import 'dart:convert';
+import 'package:attendance_app/api_service.dart';
+import 'package:attendance_app/models/user-response.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+
+Future<User> fetchUser() async {
+  String token = await ApiService.getToken() as String;
+  final response = await http.get(Uri.parse('https://hrm.garudatechnusantara.com/api/auth/profile'), 
+    headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization' : 'Bearer ' + token,
+      },
+  );
+
+  if (response.statusCode == 200) {
+    // If the server did return a 200 OK response,
+    // then parse the JSON.
+    print(response.body);
+    return User.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+  } else {
+    // If the server did not return a 200 OK response,
+    // then throw an exception.
+    throw Exception('Failed to load User');
+  }
+}
 
 class ProfileBar extends StatefulWidget {
   const ProfileBar({super.key});
@@ -8,68 +33,82 @@ class ProfileBar extends StatefulWidget {
 }
 
 class _ProfileBarState extends State<ProfileBar> {
+  late Future<User> futureUser;
+
+
+  @override
+  void initState() {
+    super.initState();
+    futureUser = fetchUser();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.topLeft,
-      child: Container(
-        width: 236,
-        height: 45,
-        decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 80, 38, 152), // Warna latar belakang
-          borderRadius: BorderRadius.circular(10), // Bentuk tepi widget
-        ),
-        child: const Stack(
-          children: <Widget>[
-            Positioned(
-              child: SizedBox(
-                width: 45,
-                height: 45,
-                child: Image(image: AssetImage("lib/images/pp.png"))
+    return Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Padding(
+            padding:
+                const EdgeInsets.only(left: 10, right: 70, top: 10, bottom: 10),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.deepPurple,
               ),
-            ),
-            Positioned(
-              left: 57,
-              top: 8,
-              child: SizedBox(
-                width: 179,
-                height: 34,
-                child: Stack(
-                  children: [
-                    Positioned(
-                      left: 0,
-                      top: 19,
-                      child: Text(
-                        '12345678 - Junior UX Designer',
-                        style: TextStyle(
-                          color: Color(0xFFF4F4F4),
-                          fontSize: 12,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w400,
-                          height: 0,
-                        ),
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, right: 10),
+                    child: Align(
+                      alignment: AlignmentDirectional.topStart,
+                      child: Image(
+                        image: AssetImage("lib/images/pp.png"),
+                        height: 50,
                       ),
                     ),
-                    Positioned(
-                      left: 0,
-                      top: 0,
-                      child: Text(
-                        'Jacob Jones',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w700,
-                          height: 0,
-                        ),
+                  ),
+                  Column(
+                    children: [
+                      Align(
+                        alignment: AlignmentDirectional.topStart,
+                        child: FutureBuilder(
+                            future: futureUser,
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                print(snapshot.data!.name);
+                                return Text(snapshot.data!.name);
+                              } else if (snapshot.hasError) {
+                                return Text('${snapshot.error}');
+                              }
+
+                              // By default, show a loading spinner.
+                              return const CircularProgressIndicator();
+                            }),
                       ),
-                    ),
-                  ],
-                ),
+                      Align(
+                        alignment: AlignmentDirectional.topStart,
+                        child: FutureBuilder(
+                            future: futureUser,
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                print(snapshot.data!.roleId);
+                                return Text(snapshot.data!.roleId);
+                              } else if (snapshot.hasError) {
+                                return Text('${snapshot.error}');
+                              }
+
+                              // By default, show a loading spinner.
+                              return const CircularProgressIndicator();
+                            }),
+                      )
+                    ],
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
